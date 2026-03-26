@@ -1,0 +1,58 @@
+atlasId,atlasName,cohortId,name
+88,[CHAPTER] pediatric Asthma,88,Pediatric_Asthma
+104,[CHAPTER]Base population from 2012,104,Base_population_2012_pediatric
+197,[CHAPTER]Afib Wharton,197,Afib_Wharton
+198,[CHAPTER]Afib SCYou,198,Afib_SCYou
+199,[CHAPTER] MM 2dx,199,MM_2dx
+200,[CHAPTER] MM 2dx + 1 proc,200,MM_2dx_1proc
+201,[CHAPTER] MM 2dx + 1proc + 1rx,201,MM_2dx_1proc_1rx
+202,[CHAPTER] MM 2dx + 1 proc + lt2 MGUS,202,MM_2dx_1rpc_MGUS
+203,[CHAPTER] Acute MI ,203,Acute_MI
+204,[CHAPTER] Acute MI with inpatient ,204,Acute_MI_inpatient
+205,[CHAPTER] Secondary Hypertension or Crisis,205,Secondary_HTN_Crisis
+206,[CHAPTER] Acute MI with no inpatient,206,Acute_MI_no_inpatient
+207,[CHAPTER] Cardiomyopathy,207,Caridomyopathy
+208,[CHAPTER] Hypertensive disorder,208,Hypertensive_disorder
+209,[CHAPTER] Essential HTN,209,Essential_HTN
+210,[CHAPTER] Essential HTN exclude secondary,210,Essential_HTN_without_secondary
+212,[CHAPTER] Secondary HTN or Crisis sudden onset,212,Secondary_HTN_Crisis_sudden
+214,[CHAPTER] ST elevated MI not inpatient ,214,STEMI_not_inpatient
+215,[CHAPTER] ST elevated MI inpatient,215,STEMI_inpatient
+216,[CHAPTER] ST elevated MI ,216,STEMI
+217,[CHAPTER] Angina Pectoris not inpatient,217,Angina_pectoris_not_inpatient
+218,[CHAPTER] Angina Pectoris Inpatient,218,Angina_pectoris_inpatient
+219,[CHAPTER] Stable Angina Not Inpatient,219,Stable_Angina_not_inpatient
+220,[CHAPTER] Stable Angina Inpatient,220,Stable_Angina_inpatient
+221,[CHAPTER] Angina Pectoris,221,Angina_pectoris
+222,[CHAPTER] Unstable Angina No Inpatient,222,Unstable_angina_no_inpatient
+223,[CHAPTER] Unstable Angina Inpatient,223,Unstable_angina_inpatient
+224,[CHAPTER] Unstable Angina,224,Unstable_angina
+225,[CHAPTER] Non ST elevated MI No Inpatient,225,NSTEMI_no_inpatient
+226,[CHAPTER] Non ST elevated MI Inpatient,226,NSTEMI_inpatient
+227,[CHAPTER] Non ST elevated MI,227,NSTEMI
+228,[CHAPTER] HF with no inpatient or ER,228,HF_no_inpatient_ER
+229,[CHAPTER] HF ,229,HF
+230,[CHAPTER] HF with inpatient or ER,230,HF_inpatient_ER
+231,[CHAPTER] Cor Pulmonale ,231,Cor_Pulmonale
+232,[CHAPTER] Cor Pulmonale inpatient or ER visit,232,Cor_Pulmonale_inpatient_ER
+233,[CHAPTER] Cor Pulmonale no inpatient or ER ,233,Cor_Pulmonale_no_inpatient_ER
+234,[CHAPTER] Hypertrophic Cardiomyopathy,234,Hypertrophic_CM
+235,[CHAPTER] Dilated Cardiomyopathy,235,Dilated_CM
+236,[CHAPTER] Takotsubo cardiomyopathy,236,Takotsubo_CM
+237,[CHAPTER] Acute MI severe outpatient,237,Acute_MI_severe_outpatient
+238,[CHAPTER] Acute MI no severe outpatient,238,Acute_MI_no_severe_outpatient
+239,[CHAPTER] Acute MI inpatient or severe outpatient,239,Acute_MI_inpatient_severe_outpatient
+52,[CHAPTER-DM] Insulin 1d after T2DM diagnosis,52,insulin_1d
+53,[CHAPTER-DM] Insulin 3d after T2DM diagnosis,53,insulin_3d
+54,[CHAPTER-DM] Hyperglycemia after diagnosis of T2DM,54,hyperglycemia
+55,[CHAPTER-DM] Hypoglycemia after diagnosis of T2DM,55,hypoglycemia
+149,[CHAPTER-DM] SU no metformin,149,su_no_metformin
+150,[CHAPTER-DM] SU prior metformin,150,su_prior_metformin
+151,[CHAPTER-DM] TZD no metformin,151,tzd_no_metformin
+152,[CHAPTER-DM] DPP-4I prior metformin,152,ddp_4i_prior_metformin
+153,[CHAPTER-DM] GLP-1RA no metformin,153,glp_1ra_no_metformin
+156,[CHAPTER-DM] GLP-1RA prior metformin,156,glp_1ra_prior_metformin
+157,[CHAPTER-DM] SGLT2I no metformin,157,sglt2i_no_metformin
+158,[CHAPTER-DM] SGLT2I prior metformin,158,sglt2i_prior_metformin
+159,[CHAPTER-DM] TZD prior metformin,159,tzd_prior_metformin
+160,[CHAPTER-DM] DPP-4I no metformin,160,dpp_4i_no_metformin

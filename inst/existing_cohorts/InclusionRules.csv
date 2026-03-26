@@ -1,0 +1,201 @@
+cohortName,ruleSequence,ruleName,cohortId
+Acute_MI_inpatient_severe_outpatient,0,has 365d prior observation,239
+Acute_MI_inpatient_severe_outpatient,1,Inpatient admission or severe outpatient,239
+Acute_MI_inpatient,0,has 365d prior observation,204
+Acute_MI_inpatient,1,Inpatient admission,204
+Acute_MI_no_inpatient,0,has 365d prior observation,206
+Acute_MI_no_inpatient,1,No Inpatient admission,206
+Acute_MI_no_severe_outpatient,0,has 365d prior observation,238
+Acute_MI_no_severe_outpatient,1,No severe outpatient,238
+Acute_MI_severe_outpatient,0,has 365d prior observation,237
+Acute_MI_severe_outpatient,1,Severe outpatient,237
+Acute_MI,0,has 365d prior observation,203
+Angina_pectoris_inpatient,0,has 365d prior observation,218
+Angina_pectoris_inpatient,1,No ST segment elevation Myocardial Infarction,218
+Angina_pectoris_inpatient,2,No ST changes on EKG,218
+Angina_pectoris_inpatient,3,No NT elevation Myocardial Infarction,218
+Angina_pectoris_inpatient,4,No Myocardial Infarction,218
+Angina_pectoris_inpatient,5,No Unstable Angina,218
+Angina_pectoris_inpatient,6,Inpatient Visit,218
+Angina_pectoris_not_inpatient,0,has 365d prior observation,217
+Angina_pectoris_not_inpatient,1,No ST segment elevation Myocardial Infarction,217
+Angina_pectoris_not_inpatient,2,No ST changes on EKG,217
+Angina_pectoris_not_inpatient,3,No NT elevation Myocardial Infarction,217
+Angina_pectoris_not_inpatient,4,No Myocardial Infarction,217
+Angina_pectoris_not_inpatient,5,No Unstable Angina,217
+Angina_pectoris_not_inpatient,6,Inpatient Visit,217
+Angina_pectoris,0,has 365d prior observation,221
+Angina_pectoris,1,No ST segment elevation Myocardial Infarction,221
+Angina_pectoris,2,No ST changes on EKG,221
+Angina_pectoris,3,No NT elevation Myocardial Infarction,221
+Angina_pectoris,4,No Myocardial Infarction,221
+Angina_pectoris,5,No Unstable Angina,221
+Caridomyopathy,0,has 365d prior observation,207
+Cor_Pulmonale_inpatient_ER,0,has 365d prior observation,232
+Cor_Pulmonale_inpatient_ER,1,Inpatient or ER visit,232
+Cor_Pulmonale_no_inpatient_ER,0,has 365d prior observation,233
+Cor_Pulmonale_no_inpatient_ER,1,No inpatient or ER visit,233
+Cor_Pulmonale,0,has 365d prior observation,231
+ddp_4i_prior_metformin,0,No prior GLP-1RA,152
+ddp_4i_prior_metformin,1,No prior SGLT2I,152
+ddp_4i_prior_metformin,2,No prior SU,152
+ddp_4i_prior_metformin,3,No prior insulin use or combo initiation,152
+ddp_4i_prior_metformin,4,No prior TZD,152
+ddp_4i_prior_metformin,5,Prior metformin use,152
+ddp_4i_prior_metformin,6,No prior other anti-diabetic exposure,152
+Dilated_CM,0,has 365d prior observation,235
+Dilated_CM,1,No history of hypertension,235
+Dilated_CM,2,No history of arrythmia,235
+Dilated_CM,3,No history of myocardial infarction,235
+Dilated_CM,4,No history of Congestive Heart Failure,235
+dpp_4i_no_metformin,0,No prior GLP-1RA,160
+dpp_4i_no_metformin,1,No prior SGLT2I,160
+dpp_4i_no_metformin,2,No prior SU,160
+dpp_4i_no_metformin,3,No prior insulin use or combo initiation,160
+dpp_4i_no_metformin,4,No prior TZD,160
+dpp_4i_no_metformin,5,No prior metformin use,160
+dpp_4i_no_metformin,6,No prior other anti-diabetic exposure,160
+Essential_HTN_without_secondary,0,has 365d prior observation,210
+Essential_HTN_without_secondary,1,Has no secondary hypertension,210
+Essential_HTN_without_secondary,2,Has no Hypertensive Crisis,210
+Essential_HTN_without_secondary,3,Has no Pregnancy Induced Hypertension,210
+Essential_HTN_without_secondary,4,Has no Intermittent Hypertension,210
+Essential_HTN,0,has 365d prior observation,209
+glp_1ra_no_metformin,0,No prior DPP-4I,153
+glp_1ra_no_metformin,1,No prior SGLT2I,153
+glp_1ra_no_metformin,2,No prior SU,153
+glp_1ra_no_metformin,3,No prior insulin use or combo initiation,153
+glp_1ra_no_metformin,4,No prior TZD,153
+glp_1ra_no_metformin,5,No prior metformin use,153
+glp_1ra_no_metformin,6,No prior other anti-diabetic exposure,153
+glp_1ra_prior_metformin,0,No prior DPP-4I,156
+glp_1ra_prior_metformin,1,No prior SGLT2I,156
+glp_1ra_prior_metformin,2,No prior SU,156
+glp_1ra_prior_metformin,3,No prior insulin use or combo initiation,156
+glp_1ra_prior_metformin,4,No prior TZD,156
+glp_1ra_prior_metformin,5,Prior metformin use,156
+glp_1ra_prior_metformin,6,No prior other anti-diabetic exposure,156
+HF_inpatient_ER,0,has 365d prior observation,230
+HF_inpatient_ER,1,Inpatient or ER visit,230
+HF_no_inpatient_ER,0,has 365d prior observation,228
+HF_no_inpatient_ER,1,No inpatient or ER visit,228
+HF,0,has 365d prior observation,229
+hyperglycemia,0,with 365d prior observation,54
+hyperglycemia,1,no Type 1 diabetes mellitus diagnosis on or prior to T2DM,54
+hyperglycemia,2,no secondary diabetes diagnosis on or prior to T2DM,54
+hyperglycemia,3,hyperglycemia after T2DM diagnosis,54
+Hypertensive_disorder,0,has 365d prior observation,208
+Hypertrophic_CM,0,has 365d prior observation,234
+Hypertrophic_CM,1,No history of hypertension,234
+Hypertrophic_CM,2,No history of arrythmia,234
+Hypertrophic_CM,3,No history of myocardial infarction,234
+Hypertrophic_CM,4,No history of Congestive Heart Failure,234
+hypoglycemia,0,has 365d prior observation,55
+hypoglycemia,1,no Type 1 diabetes mellitus diagnosis on or prior to T2DM,55
+hypoglycemia,2,no secondary diabetes diagnosis on or prior to T2DM,55
+hypoglycemia,3,hypoglycemia after T2DM diagnosis,55
+insulin_1d,0,365d prior obsearvation,52
+insulin_1d,1,no Type 1 diabetes mellitus diagnosis on or prior to T2DM,52
+insulin_1d,2,no secondary diabetes diagnosis on or prior to T2DM,52
+insulin_1d,3,Insulin with in 1d of T2DM diagnosis,52
+insulin_3d,0,365d prior observation,53
+insulin_3d,1,no Type 1 diabetes mellitus diagnosis on or prior to T2DM,53
+insulin_3d,2,no secondary diabetes diagnosis on or prior to T2DM,53
+insulin_3d,3,insulin within 3d of T2DM diagnosis,53
+NSTEMI_inpatient,0,has 365d prior observation,226
+NSTEMI_inpatient,1,No ST segment elevation Myocardial Infarction,226
+NSTEMI_inpatient,2,No ST changes on EKG,226
+NSTEMI_inpatient,3,Inpatient Visit,226
+NSTEMI_no_inpatient,0,has 365d prior observation,225
+NSTEMI_no_inpatient,1,No ST segment elevation Myocardial Infarction,225
+NSTEMI_no_inpatient,2,No ST changes on EKG,225
+NSTEMI_no_inpatient,3,No Inpatient Visit,225
+NSTEMI,0,has 365d prior observation,227
+NSTEMI,1,No ST segment elevation Myocardial Infarction,227
+NSTEMI,2,No ST changes on EKG,227
+Pediatric_Asthma,0,Asthma Treatment,88
+Pediatric_Asthma,1,no COPD prior,88
+Secondary_HTN_Crisis_sudden,0,has 365d prior observation,212
+Secondary_HTN_Crisis_sudden,1,Has no Pregnancy Induced Hypertension,212
+Secondary_HTN_Crisis_sudden,2,Has no Intermittent Hypertension,212
+Secondary_HTN_Crisis,0,Has no Pregnancy Induced Hypertension,205
+Secondary_HTN_Crisis,1,Has no Intermittent Hypertension,205
+sglt2i_no_metformin,0,No prior DPP-4I,157
+sglt2i_no_metformin,1,No prior GLP-1RA,157
+sglt2i_no_metformin,2,No prior SU,157
+sglt2i_no_metformin,3,No prior insulin use or combo initiation,157
+sglt2i_no_metformin,4,No prior TZD,157
+sglt2i_no_metformin,5,No prior metformin use,157
+sglt2i_no_metformin,6,No prior other anti-diabetic exposure,157
+sglt2i_prior_metformin,0,No prior DPP-4I,158
+sglt2i_prior_metformin,1,No prior GLP-1RA,158
+sglt2i_prior_metformin,2,No prior SU,158
+sglt2i_prior_metformin,3,No prior insulin use or combo initiation,158
+sglt2i_prior_metformin,4,No prior TZD,158
+sglt2i_prior_metformin,5,Prior metformin use,158
+sglt2i_prior_metformin,6,No prior other anti-diabetic exposure,158
+Stable_Angina_inpatient,0,has 365d prior observation,220
+Stable_Angina_inpatient,1,No ST segment elevation Myocardial Infarction,220
+Stable_Angina_inpatient,2,No ST changes on EKG,220
+Stable_Angina_inpatient,3,No NT elevation Myocardial Infarction,220
+Stable_Angina_inpatient,4,No Myocardial Infarction,220
+Stable_Angina_inpatient,5,No Unstable Angina,220
+Stable_Angina_inpatient,6,Inpatient Visit,220
+Stable_Angina_not_inpatient,0,has 365d prior observation,219
+Stable_Angina_not_inpatient,1,No ST segment elevation Myocardial Infarction,219
+Stable_Angina_not_inpatient,2,No ST changes on EKG,219
+Stable_Angina_not_inpatient,3,No NT elevation Myocardial Infarction,219
+Stable_Angina_not_inpatient,4,No Myocardial Infarction,219
+Stable_Angina_not_inpatient,5,No Unstable Angina,219
+Stable_Angina_not_inpatient,6,Inpatient Visit,219
+STEMI_inpatient,0,has 365d prior observation,215
+STEMI_inpatient,1,Inpatient Visit,215
+STEMI_not_inpatient,0,has 365d prior observation,214
+STEMI_not_inpatient,1,No Inpatient Visit,214
+STEMI,0,has 365d prior observation,216
+su_no_metformin,0,No prior DPP-4I,149
+su_no_metformin,1,No prior GLP-1RA,149
+su_no_metformin,2,No prior SGLT2I,149
+su_no_metformin,3,No prior insulin use or combo initiation,149
+su_no_metformin,4,No prior TZD,149
+su_no_metformin,5,No prior metformin use,149
+su_no_metformin,6,No prior other anti-diabetic exposure,149
+su_prior_metformin,0,No prior DPP-4I,150
+su_prior_metformin,1,No prior GLP-1RA,150
+su_prior_metformin,2,No prior SGLT2I,150
+su_prior_metformin,3,No prior insulin use or combo initiation,150
+su_prior_metformin,4,No prior TZD,150
+su_prior_metformin,5,Prior metformin use,150
+su_prior_metformin,6,No prior other anti-diabetic exposure,150
+Takotsubo_CM,0,has 365d prior observation,236
+tzd_no_metformin,0,No prior GLP-1RA,151
+tzd_no_metformin,1,No prior SGLT2I,151
+tzd_no_metformin,2,No prior SU,151
+tzd_no_metformin,3,No prior insulin use or combo initiation,151
+tzd_no_metformin,4,No prior DPP-4I,151
+tzd_no_metformin,5,No prior metformin use,151
+tzd_no_metformin,6,No prior other anti-diabetic exposure,151
+tzd_prior_metformin,0,No prior GLP-1RA,159
+tzd_prior_metformin,1,No prior SGLT2I,159
+tzd_prior_metformin,2,No prior SU,159
+tzd_prior_metformin,3,No prior insulin use or combo initiation,159
+tzd_prior_metformin,4,No prior DPP-4I,159
+tzd_prior_metformin,5,Prior metformin use,159
+tzd_prior_metformin,6,No prior other anti-diabetic exposure,159
+Unstable_angina_inpatient,0,has 365d prior observation,223
+Unstable_angina_inpatient,1,No ST segment elevation Myocardial Infarction,223
+Unstable_angina_inpatient,2,No ST changes on EKG,223
+Unstable_angina_inpatient,3,No NT elevation Myocardial Infarction,223
+Unstable_angina_inpatient,4,No Myocardial Infarction,223
+Unstable_angina_inpatient,5,Inpatient Visit,223
+Unstable_angina_no_inpatient,0,has 365d prior observation,222
+Unstable_angina_no_inpatient,1,No ST segment elevation Myocardial Infarction,222
+Unstable_angina_no_inpatient,2,No ST changes on EKG,222
+Unstable_angina_no_inpatient,3,No NT elevation Myocardial Infarction,222
+Unstable_angina_no_inpatient,4,No Myocardial Infarction,222
+Unstable_angina_no_inpatient,5,No Inpatient Visit,222
+Unstable_angina,0,has 365d prior observation,224
+Unstable_angina,1,No ST segment elevation Myocardial Infarction,224
+Unstable_angina,2,No ST changes on EKG,224
+Unstable_angina,3,No NT elevation Myocardial Infarction,224
+Unstable_angina,4,No Myocardial Infarction,224

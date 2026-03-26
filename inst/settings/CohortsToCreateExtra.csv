@@ -1,0 +1,15 @@
+atlasId,atlasName,cohortId,cohortName,table_name
+1,[CHAPTER],1,allergic_rhinitis,chronic_cohorts_extra
+1,[CHAPTER],2,atopic_dermatitis,chronic_cohorts_extra
+1,[CHAPTER],3,chronic_kidney_disease,chronic_cohorts_extra
+1,[CHAPTER],4,chronic_liver_disease,chronic_cohorts_extra
+1,[CHAPTER],5,copd,chronic_cohorts_extra
+1,[CHAPTER],6,hypercholesterolemia,chronic_cohorts_extra
+1,[CHAPTER],7,livercancer,chronic_cohorts_extra
+1,[CHAPTER],8,lungcancer,chronic_cohorts_extra
+1,[CHAPTER],9,prostatecancer,chronic_cohorts_extra
+1,[CHAPTER],10,stomachcancer,chronic_cohorts_extra
+1,[CHAPTER],1,bone_fracture,acute_cohorts_extra
+1,[CHAPTER],2,pneumonia,acute_cohorts_extra
+1,[CHAPTER],3,sti,acute_cohorts_extra
+1,[CHAPTER],4,uti,acute_cohorts_extra

@@ -1,0 +1,33 @@
+Package: CHAPTER
+Type: Package
+Title: CHAPTER
+Version: 0.0.2
+Author: c(
+    person("Chang Hoon", "Han", , "paul9567@yuhs.ac", role = c("aut", "cre")),
+    person("Seng Chan", "You", , "seng.chan.you@ohdsi.org", role = c("aut"))
+    )
+Maintainer: Chang Hoon Han <paul9567@yuhs.ac>
+Description: A package for the CHAPTER study. This package instantiates
+    cohorts and computes incidence and basic cohort characteristics for
+    multiple acute and chronic conditions using an ATLAS-compatible
+    OHDSI stack (DatabaseConnector, SqlRender, CohortGenerator, etc.).
+Depends:
+    R (>= 4.1.0)
+Imports:
+    DatabaseConnector,
+    SqlRender,
+    CohortGenerator,
+    ParallelLogger,
+    dplyr,
+    readr,
+    zip
+Suggests:
+    knitr,
+    rmarkdown,
+    ROhdsiWebApi,
+    OhdsiRTools,
+    CohortDiagnostics
+License: Apache License 2.0
+VignetteBuilder: knitr
+LazyData: TRUE
+RoxygenNote: 7.3.2

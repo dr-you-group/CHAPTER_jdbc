@@ -1,0 +1,1397 @@
+{
+  "ConceptSets": [
+    {
+      "id": 0,
+      "name": "[Phenotype Phebruary Day 3] Atrial fibrillation conceptset from Subramanya paper",
+      "expression": {
+        "items": [
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Finding",
+              "CONCEPT_CODE": "49436004",
+              "CONCEPT_ID": 313217,
+              "CONCEPT_NAME": "Atrial fibrillation",
+              "DOMAIN_ID": "Condition",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "SNOMED"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Finding",
+              "CONCEPT_CODE": "5370000",
+              "CONCEPT_ID": 314665,
+              "CONCEPT_NAME": "Atrial flutter",
+              "DOMAIN_ID": "Condition",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "SNOMED"
+            },
+            "includeDescendants": true
+          }
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "name": "Inpatient or inpatient ER visit",
+      "expression": {
+        "items": [
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Visit",
+              "CONCEPT_CODE": "ERIP",
+              "CONCEPT_ID": 262,
+              "CONCEPT_NAME": "Emergency Room and Inpatient Visit",
+              "DOMAIN_ID": "Visit",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "Visit"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Visit",
+              "CONCEPT_CODE": "IP",
+              "CONCEPT_ID": 9201,
+              "CONCEPT_NAME": "Inpatient Visit",
+              "DOMAIN_ID": "Visit",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "Visit"
+            },
+            "includeDescendants": true
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "Outpatient or ER visit",
+      "expression": {
+        "items": [
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Visit",
+              "CONCEPT_CODE": "OP",
+              "CONCEPT_ID": 9202,
+              "CONCEPT_NAME": "Outpatient Visit",
+              "DOMAIN_ID": "Visit",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "Visit"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Visit",
+              "CONCEPT_CODE": "ER",
+              "CONCEPT_ID": 9203,
+              "CONCEPT_NAME": "Emergency Room Visit",
+              "DOMAIN_ID": "Visit",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "Visit"
+            },
+            "includeDescendants": true
+          }
+        ]
+      }
+    }
+  ],
+  "PrimaryCriteria": {
+    "CriteriaList": [
+      {
+        "ConditionOccurrence": {
+          "CodesetId": 0
+        }
+      }
+    ],
+    "ObservationWindow": {
+      "PriorDays": 0,
+      "PostDays": 0
+    },
+    "PrimaryCriteriaLimit": {
+      "Type": "All"
+    }
+  },
+  "QualifiedLimit": {
+    "Type": "First"
+  },
+  "ExpressionLimit": {
+    "Type": "All"
+  },
+  "InclusionRules": [
+    {
+      "name": "At least 1 inpatient AF diagnosis or 2 outpatient AF diagnoses",
+      "expression": {
+        "Type": "ANY",
+        "CriteriaList": [
+          {
+            "Criteria": {
+              "ConditionOccurrence": {
+                "CodesetId": 0,
+                "VisitType": [
+                  {
+                    "CONCEPT_CODE": "ERIP",
+                    "CONCEPT_ID": 262,
+                    "CONCEPT_NAME": "Emergency Room and Inpatient Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "21",
+                    "CONCEPT_ID": 8717,
+                    "CONCEPT_NAME": "Inpatient Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "52",
+                    "CONCEPT_ID": 8913,
+                    "CONCEPT_NAME": "Psychiatric Facility-Partial Hospitalization",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "51",
+                    "CONCEPT_ID": 8971,
+                    "CONCEPT_NAME": "Inpatient Psychiatric Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "IP",
+                    "CONCEPT_ID": 9201,
+                    "CONCEPT_NAME": "Inpatient Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822460",
+                    "CONCEPT_ID": 32037,
+                    "CONCEPT_NAME": "Intensive Care",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "18",
+                    "CONCEPT_ID": 32254,
+                    "CONCEPT_NAME": "Hospital-Swing Beds",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "UB04 Typ bill"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4873971",
+                    "CONCEPT_ID": 32760,
+                    "CONCEPT_NAME": "Isolation in inpatient setting",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822042",
+                    "CONCEPT_ID": 581379,
+                    "CONCEPT_NAME": "Inpatient Critical Care Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822038",
+                    "CONCEPT_ID": 581383,
+                    "CONCEPT_NAME": "Inpatient Cardiac Care Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822037",
+                    "CONCEPT_ID": 581384,
+                    "CONCEPT_NAME": "Inpatient Nursery",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "273100000X",
+                    "CONCEPT_ID": 38004270,
+                    "CONCEPT_NAME": "Epilepsy Hospital Unit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "276400000X",
+                    "CONCEPT_ID": 38004274,
+                    "CONCEPT_NAME": "Substance Use Disorder Rehabilitation Hospital Unit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "281P00000X",
+                    "CONCEPT_ID": 38004275,
+                    "CONCEPT_NAME": "Chronic Disease Hospital Unit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "281PC2000X",
+                    "CONCEPT_ID": 38004276,
+                    "CONCEPT_NAME": "Chronic Disease Children Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282E00000X",
+                    "CONCEPT_ID": 38004277,
+                    "CONCEPT_NAME": "Long Term Care Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282J00000X",
+                    "CONCEPT_ID": 38004278,
+                    "CONCEPT_NAME": "Religious Nonmedical Health Care Institution",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282N00000X",
+                    "CONCEPT_ID": 38004279,
+                    "CONCEPT_NAME": "General Acute Care Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282NC0060X",
+                    "CONCEPT_ID": 38004280,
+                    "CONCEPT_NAME": "General Acute Care Critical Access Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282NC2000X",
+                    "CONCEPT_ID": 38004281,
+                    "CONCEPT_NAME": "General Acute Care Children Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282NR1301X",
+                    "CONCEPT_ID": 38004282,
+                    "CONCEPT_NAME": "General Rural Acute Care Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "282NW0100X",
+                    "CONCEPT_ID": 38004283,
+                    "CONCEPT_NAME": "General Acute Care Women Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "283Q00000X",
+                    "CONCEPT_ID": 38004284,
+                    "CONCEPT_NAME": "Psychiatric Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "283X00000X",
+                    "CONCEPT_ID": 38004285,
+                    "CONCEPT_NAME": "Rehabilitation Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "283XC2000X",
+                    "CONCEPT_ID": 38004286,
+                    "CONCEPT_NAME": "Rehabilitation Children Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "284300000X",
+                    "CONCEPT_ID": 38004287,
+                    "CONCEPT_NAME": "Special Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "286500000X",
+                    "CONCEPT_ID": 38004288,
+                    "CONCEPT_NAME": "Military Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "2865M2000X",
+                    "CONCEPT_ID": 38004290,
+                    "CONCEPT_NAME": "Military General Acute Care Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "2865X1600X",
+                    "CONCEPT_ID": 38004291,
+                    "CONCEPT_NAME": "Military General Acute Care Operational (Transportable) Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "A0",
+                    "CONCEPT_ID": 38004515,
+                    "CONCEPT_NAME": "Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  }
+                ]
+              }
+            },
+            "StartWindow": {
+              "Start": {
+                "Coeff": -1
+              },
+              "End": {
+                "Coeff": 1
+              },
+              "UseEventEnd": false
+            },
+            "Occurrence": {
+              "Type": 2,
+              "Count": 1
+            }
+          },
+          {
+            "Criteria": {
+              "ConditionOccurrence": {
+                "CodesetId": 0,
+                "VisitType": [
+                  {
+                    "CONCEPT_CODE": "19",
+                    "CONCEPT_ID": 5084,
+                    "CONCEPT_NAME": "Off Campus-Outpatient Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "15",
+                    "CONCEPT_ID": 8584,
+                    "CONCEPT_NAME": "Mobile Unit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "25",
+                    "CONCEPT_ID": 8650,
+                    "CONCEPT_NAME": "Birthing Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "49",
+                    "CONCEPT_ID": 8716,
+                    "CONCEPT_NAME": "Independent Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "22",
+                    "CONCEPT_ID": 8756,
+                    "CONCEPT_NAME": "Outpatient Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "72",
+                    "CONCEPT_ID": 8761,
+                    "CONCEPT_NAME": "Rural Health Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "20",
+                    "CONCEPT_ID": 8782,
+                    "CONCEPT_NAME": "Urgent Care Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "60",
+                    "CONCEPT_ID": 8858,
+                    "CONCEPT_NAME": "Mass Immunization Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "23",
+                    "CONCEPT_ID": 8870,
+                    "CONCEPT_NAME": "Emergency Room - Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "24",
+                    "CONCEPT_ID": 8883,
+                    "CONCEPT_NAME": "Ambulatory Surgical Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "26",
+                    "CONCEPT_ID": 8905,
+                    "CONCEPT_NAME": "Military Treatment Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "07",
+                    "CONCEPT_ID": 8941,
+                    "CONCEPT_NAME": "Tribal 638 Free-standing Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "62",
+                    "CONCEPT_ID": 8947,
+                    "CONCEPT_NAME": "Comprehensive Outpatient Rehabilitation Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "65",
+                    "CONCEPT_ID": 8949,
+                    "CONCEPT_NAME": "End-Stage Renal Disease Treatment Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "08",
+                    "CONCEPT_ID": 8960,
+                    "CONCEPT_NAME": "Tribal 638 Provider-based Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "53",
+                    "CONCEPT_ID": 8964,
+                    "CONCEPT_NAME": "Community Mental Health Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "50",
+                    "CONCEPT_ID": 8966,
+                    "CONCEPT_NAME": "Federally Qualified Health Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "05",
+                    "CONCEPT_ID": 8968,
+                    "CONCEPT_NAME": "Indian Health Service Free-standing Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "06",
+                    "CONCEPT_ID": 8969,
+                    "CONCEPT_NAME": "Indian Health Service Provider-based Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "57",
+                    "CONCEPT_ID": 8974,
+                    "CONCEPT_NAME": "Non-residential Substance Abuse Treatment Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "71",
+                    "CONCEPT_ID": 8977,
+                    "CONCEPT_NAME": "Public Health Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OP",
+                    "CONCEPT_ID": 9202,
+                    "CONCEPT_NAME": "Outpatient Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "ER",
+                    "CONCEPT_ID": 9203,
+                    "CONCEPT_NAME": "Emergency Room Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "43",
+                    "CONCEPT_ID": 32261,
+                    "CONCEPT_NAME": "Religious Non-medical Health Care Inst-Outpatient Services",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "UB04 Typ bill"
+                  },
+                  {
+                    "CONCEPT_CODE": "85",
+                    "CONCEPT_ID": 32276,
+                    "CONCEPT_NAME": "Critical Access Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "UB04 Typ bill"
+                  },
+                  {
+                    "CONCEPT_CODE": "HE",
+                    "CONCEPT_ID": 32693,
+                    "CONCEPT_NAME": "Health examination",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822041",
+                    "CONCEPT_ID": 581380,
+                    "CONCEPT_NAME": "Outpatient Critical Care Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822040",
+                    "CONCEPT_ID": 581381,
+                    "CONCEPT_NAME": "Emergency Room Critical Care Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822036",
+                    "CONCEPT_ID": 581385,
+                    "CONCEPT_NAME": "Observation Room",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822458",
+                    "CONCEPT_ID": 581477,
+                    "CONCEPT_NAME": "Office Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP4822456",
+                    "CONCEPT_ID": 581479,
+                    "CONCEPT_NAME": "Ambulatory Rehabilitation Visit",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "OMOP5160862",
+                    "CONCEPT_ID": 705159,
+                    "CONCEPT_NAME": "Ambulatory long COVID clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Visit"
+                  },
+                  {
+                    "CONCEPT_CODE": "17",
+                    "CONCEPT_ID": 38003620,
+                    "CONCEPT_NAME": "Walk-in Retail Health Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "CMS Place of Service"
+                  },
+                  {
+                    "CONCEPT_CODE": "193200000X",
+                    "CONCEPT_ID": 38003820,
+                    "CONCEPT_NAME": "Multi-Specialty Group",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "193400000X",
+                    "CONCEPT_ID": 38003821,
+                    "CONCEPT_NAME": "Single Specialty Group",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "252Y00000X",
+                    "CONCEPT_ID": 38004204,
+                    "CONCEPT_NAME": "Early Intervention Provider Agency",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261Q00000X",
+                    "CONCEPT_ID": 38004207,
+                    "CONCEPT_NAME": "Ambulatory Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QA0005X",
+                    "CONCEPT_ID": 38004208,
+                    "CONCEPT_NAME": "Ambulatory Family Planning Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QA0006X",
+                    "CONCEPT_ID": 38004209,
+                    "CONCEPT_NAME": "Ambulatory Fertility Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QA0600X",
+                    "CONCEPT_ID": 38004210,
+                    "CONCEPT_NAME": "Ambulatory Adult Day Care Center / Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QA0900X",
+                    "CONCEPT_ID": 38004211,
+                    "CONCEPT_NAME": "Ambulatory Amputee Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QA3000X",
+                    "CONCEPT_ID": 38004213,
+                    "CONCEPT_NAME": "Ambulatory Augmentative Communication Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QC0050X",
+                    "CONCEPT_ID": 38004215,
+                    "CONCEPT_NAME": "Ambulatory Critical Access Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QC1500X",
+                    "CONCEPT_ID": 38004216,
+                    "CONCEPT_NAME": "Ambulatory Community Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QC1800X",
+                    "CONCEPT_ID": 38004217,
+                    "CONCEPT_NAME": "Ambulatory Corporate Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QD0000X",
+                    "CONCEPT_ID": 38004218,
+                    "CONCEPT_NAME": "Ambulatory Dental Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QD1600X",
+                    "CONCEPT_ID": 38004219,
+                    "CONCEPT_NAME": "Ambulatory Developmental Disabilities Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QE0002X",
+                    "CONCEPT_ID": 38004220,
+                    "CONCEPT_NAME": "Ambulatory Emergency Care Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QE0800X",
+                    "CONCEPT_ID": 38004222,
+                    "CONCEPT_NAME": "Ambulatory Endoscopy Cinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QF0050X",
+                    "CONCEPT_ID": 38004223,
+                    "CONCEPT_NAME": "Ambulatory Non-Surgical Family Planning Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QG0250X",
+                    "CONCEPT_ID": 38004225,
+                    "CONCEPT_NAME": "Ambulatory Genetics Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QH0100X",
+                    "CONCEPT_ID": 38004226,
+                    "CONCEPT_NAME": "Ambulatory Health Service Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QH0700X",
+                    "CONCEPT_ID": 38004227,
+                    "CONCEPT_NAME": "Ambulatory Hearing and Speech Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QI0500X",
+                    "CONCEPT_ID": 38004228,
+                    "CONCEPT_NAME": "Ambulatory Infusion Therapy Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QL0400X",
+                    "CONCEPT_ID": 38004229,
+                    "CONCEPT_NAME": "Ambulatory Lithotripsy Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM0850X",
+                    "CONCEPT_ID": 38004231,
+                    "CONCEPT_NAME": "Ambulatory Adult Mental Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM0855X",
+                    "CONCEPT_ID": 38004232,
+                    "CONCEPT_NAME": "Ambulatory Adolescent and Children Mental Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1000X",
+                    "CONCEPT_ID": 38004233,
+                    "CONCEPT_NAME": "Ambulatory Migrant Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1100X",
+                    "CONCEPT_ID": 38004234,
+                    "CONCEPT_NAME": "Ambulatory Military / U.S. Coast Guard Outpatient Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1101X",
+                    "CONCEPT_ID": 38004235,
+                    "CONCEPT_NAME": "Ambulatory Military and U.S. Coast Guard Ambulatory Procedure Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1102X",
+                    "CONCEPT_ID": 38004236,
+                    "CONCEPT_NAME": "Ambulatory Military Outpatient Operational (Transportable) Component Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1103X",
+                    "CONCEPT_ID": 38004237,
+                    "CONCEPT_NAME": "Ambulatory Military Ambulatory Procedure Visits Operational (Transportable) Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1200X",
+                    "CONCEPT_ID": 38004238,
+                    "CONCEPT_NAME": "Ambulatory Magnetic Resonance Imaging (MRI) Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM1300X",
+                    "CONCEPT_ID": 38004239,
+                    "CONCEPT_NAME": "Ambulatory Multi-Specialty Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM2500X",
+                    "CONCEPT_ID": 38004240,
+                    "CONCEPT_NAME": "Ambulatory Medical Specialty Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM2800X",
+                    "CONCEPT_ID": 38004241,
+                    "CONCEPT_NAME": "Ambulatory Methadone Clinic",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QM3000X",
+                    "CONCEPT_ID": 38004242,
+                    "CONCEPT_NAME": "Ambulatory Medically Fragile Intants and Children Day Care Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP0904X",
+                    "CONCEPT_ID": 38004243,
+                    "CONCEPT_NAME": "Ambulatory Federal Public Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP0905X",
+                    "CONCEPT_ID": 38004244,
+                    "CONCEPT_NAME": "Ambulatory State or Local Public Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP1100X",
+                    "CONCEPT_ID": 38004245,
+                    "CONCEPT_NAME": "Ambulatory Podiatric Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP2000X",
+                    "CONCEPT_ID": 38004246,
+                    "CONCEPT_NAME": "Ambulatory Physical Therapy Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP2300X",
+                    "CONCEPT_ID": 38004247,
+                    "CONCEPT_NAME": "Ambulatory Primary Care Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP2400X",
+                    "CONCEPT_ID": 38004248,
+                    "CONCEPT_NAME": "Ambulatory Prison Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QP3300X",
+                    "CONCEPT_ID": 38004249,
+                    "CONCEPT_NAME": "Ambulatory Pain Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0200X",
+                    "CONCEPT_ID": 38004250,
+                    "CONCEPT_NAME": "Ambulatory Radiology Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0206X",
+                    "CONCEPT_ID": 38004251,
+                    "CONCEPT_NAME": "Ambulatory Mammography Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0207X",
+                    "CONCEPT_ID": 38004252,
+                    "CONCEPT_NAME": "Ambulatory Mobile Mammography Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0208X",
+                    "CONCEPT_ID": 38004253,
+                    "CONCEPT_NAME": "Ambulatory Mobile Radiology Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0400X",
+                    "CONCEPT_ID": 38004254,
+                    "CONCEPT_NAME": "Ambulatory Rehabilitation Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0404X",
+                    "CONCEPT_ID": 38004256,
+                    "CONCEPT_NAME": "Ambulatory Cardiac Rehabilitation Facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0405X",
+                    "CONCEPT_ID": 38004257,
+                    "CONCEPT_NAME": "Ambulatory Substance Use Disorder Rehabilitation Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR0800X",
+                    "CONCEPT_ID": 38004258,
+                    "CONCEPT_NAME": "Ambulatory Recovery Care Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR1100X",
+                    "CONCEPT_ID": 38004259,
+                    "CONCEPT_NAME": "Ambulatory Research Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QR1300X",
+                    "CONCEPT_ID": 38004260,
+                    "CONCEPT_NAME": "Ambulatory Rural Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QS0112X",
+                    "CONCEPT_ID": 38004261,
+                    "CONCEPT_NAME": "Ambulatory Oral and Maxillofacial Surgery Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QS0132X",
+                    "CONCEPT_ID": 38004262,
+                    "CONCEPT_NAME": "Ambulatory Ophthalmologic Surgery Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QS1000X",
+                    "CONCEPT_ID": 38004263,
+                    "CONCEPT_NAME": "Ambulatory Student Health Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QS1200X",
+                    "CONCEPT_ID": 38004264,
+                    "CONCEPT_NAME": "Ambulatory Sleep Disorder Diagnostic Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QV0200X",
+                    "CONCEPT_ID": 38004266,
+                    "CONCEPT_NAME": "Ambulatory VA Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QX0100X",
+                    "CONCEPT_ID": 38004267,
+                    "CONCEPT_NAME": "Ambulatory Occupational Medicine Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QX0200X",
+                    "CONCEPT_ID": 38004268,
+                    "CONCEPT_NAME": "Ambulatory Oncology Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "261QX0203X",
+                    "CONCEPT_ID": 38004269,
+                    "CONCEPT_NAME": "Ambulatory Oncological Radiation Clinic / Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "286500000X",
+                    "CONCEPT_ID": 38004288,
+                    "CONCEPT_NAME": "Military Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "2865M2000X",
+                    "CONCEPT_ID": 38004290,
+                    "CONCEPT_NAME": "Military General Acute Care Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "2865X1600X",
+                    "CONCEPT_ID": 38004291,
+                    "CONCEPT_NAME": "Military General Acute Care Operational (Transportable) Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "NUCC"
+                  },
+                  {
+                    "CONCEPT_CODE": "8",
+                    "CONCEPT_ID": 38004453,
+                    "CONCEPT_NAME": "Family Practice",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "A0",
+                    "CONCEPT_ID": 38004515,
+                    "CONCEPT_NAME": "Hospital",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "B4",
+                    "CONCEPT_ID": 38004526,
+                    "CONCEPT_NAME": "Rehabilitation Agency",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "45",
+                    "CONCEPT_ID": 38004677,
+                    "CONCEPT_NAME": "Mammography Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "70",
+                    "CONCEPT_ID": 38004693,
+                    "CONCEPT_NAME": "Clinic or Group Practice",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "74",
+                    "CONCEPT_ID": 38004696,
+                    "CONCEPT_NAME": "Radiation Therapy Center",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  },
+                  {
+                    "CONCEPT_CODE": "A9",
+                    "CONCEPT_ID": 38004702,
+                    "CONCEPT_NAME": "Indian Health Service facility",
+                    "DOMAIN_ID": "Visit",
+                    "INVALID_REASON_CAPTION": "Unknown",
+                    "STANDARD_CONCEPT_CAPTION": "Unknown",
+                    "VOCABULARY_ID": "Medicare Specialty"
+                  }
+                ]
+              }
+            },
+            "StartWindow": {
+              "Start": {
+                "Coeff": -1
+              },
+              "End": {
+                "Coeff": 1
+              },
+              "UseEventEnd": false
+            },
+            "Occurrence": {
+              "Type": 2,
+              "Count": 2
+            }
+          }
+        ],
+        "DemographicCriteriaList": [],
+        "Groups": []
+      }
+    }
+  ],
+  "EndStrategy": {
+    "DateOffset": {
+      "DateField": "StartDate",
+      "Offset": 30
+    }
+  },
+  "CensoringCriteria": [],
+  "CollapseSettings": {
+    "CollapseType": "ERA",
+    "EraPad": 0
+  },
+  "CensorWindow": {},
+  "cdmVersionRange": ">=5.0.0"
+}

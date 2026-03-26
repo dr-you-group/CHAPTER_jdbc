@@ -1,0 +1,15 @@
+denominator_id,denominator_name,denominator_table_name,outcome_id,outcome_name,outcome_table_name,time_at_risk
+1,all_population,all_population,1,allergic_rhinitis,chronic_cohorts_extra,NA
+1,all_population,all_population,2,atopic_dermatitis,chronic_cohorts_extra,NA
+1,all_population,all_population,3,chronic_kidney_disease,chronic_cohorts_extra,NA
+1,all_population,all_population,4,chronic_liver_disease,chronic_cohorts_extra,NA
+1,all_population,all_population,5,copd,chronic_cohorts_extra,NA
+1,all_population,all_population,6,hypercholesterolemia,chronic_cohorts_extra,NA
+1,all_population,all_population,7,livercancer,chronic_cohorts_extra,NA
+1,all_population,all_population,8,lungcancer,chronic_cohorts_extra,NA
+1,all_population,all_population,9,prostatecancer,chronic_cohorts_extra,NA
+1,all_population,all_population,10,stomachcancer,chronic_cohorts_extra,NA
+1,all_population,all_population,1,bone_fracture,acute_cohorts_extra,NA
+1,all_population,all_population,2,pneumonia,acute_cohorts_extra,NA
+1,all_population,all_population,3,sti,acute_cohorts_extra,NA
+1,all_population,all_population,4,uti,acute_cohorts_extra,NA
