@@ -30,10 +30,7 @@ getIncidenceResults <- function(connection,
   
   
   
-  if (calculateIncidence && !createDenominator) {
-    stop("calculateIncidence = TRUE requires createDenominator = TRUE.")
-  }
-  
+
   #--------------------------------------------
   # 1. Cohort characteristics (Table 1-ish)
   #--------------------------------------------
