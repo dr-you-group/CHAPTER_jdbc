@@ -21,9 +21,12 @@ maxCores <- parallel::detectCores() -1
 outputFolder <- ""
 
 
-# Details for connecting to the server:
+# Details for connecting to the server.
+# For Oracle, use dbms = "oracle".
+# For HealthVerity Databricks, use dbms = "spark" and the JDBC connection
+# string/driver path provided by the data partner environment.
 connectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms = "oracle",
+  dbms = "spark",
   connectionString = "",
   user = "",
   password = "",
@@ -31,6 +34,7 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 )
 # Check connection
 conn <- DatabaseConnector::connect(connectionDetails) 
+DatabaseConnector::disconnect(conn)
 
 
 

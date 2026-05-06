@@ -19,8 +19,9 @@ As part of the OHDSI APAC Symposium 2012, the APAC Community selected 4 studies 
 Requirements
 ============
 
-- A database in [Common Data Model version 5](https://github.com/OHDSI/CommonDataModel) in one of these platforms: SQL Server, Oracle, PostgreSQL, IBM Netezza, Apache Impala, Amazon RedShift, Google BigQuery, or Microsoft APS.
-- R version 4.0.0 or newer
+- A database in [Common Data Model version 5](https://github.com/OHDSI/CommonDataModel).
+- The current execution path is intended for Oracle and Databricks environments.
+- R version 4.1.0 or newer
 - On Windows: [RTools](http://cran.r-project.org/bin/windows/Rtools/)
 - [Java](http://java.com)
 - 25 GB of free disk space
@@ -37,57 +38,68 @@ How to run
 
 3. In RStudio, select 'Build' then 'Install and Restart' to build the package.
 
-3. Once installed, you can execute the study by modifying and using the code below. For your convenience, this code is also provided under `extras/CodeToRun.R`:
+3. Once installed, execute the study by modifying `extras/CodeToRun.R`. The main execution function expects `connectionDetails`, not an already-open `dbConnection`.
 
 	```r
 	library(CHAPTER)
 
 	# Optional: specify where the temporary files (used by the Andromeda package) will be created:
-	options(andromedaTempFolder = "s:/andromedaTemp")
+	options(andromedaTempFolder = "")
 
 	# Maximum number of cores to be used:
-	maxCores <- parallel::detectCores()
+	maxCores <- parallel::detectCores() - 1
 
 	# The folder where the study intermediate and result files will be written:
-	outputFolder <- "c:/CHAPTER"
+	outputFolder <- ""
 
-	# Details for connecting to the server
-        db <- DBI::dbConnect(odbc::odbc(),
-                             Driver   = "ODBC Driver 18 for SQL Server",
-                             Server   = "10.19.10.241",
-                             Database = "Synpuf",
-                             UID      = "******",
-                             PWD = "******",
-                             TrustServerCertificate = "yes",
-                             Port     = 1433)
+	# Details for connecting to the server. For Databricks, use dbms = "spark"
+	# with the Spark/Databricks JDBC driver and the connection string supported
+	# by your HealthVerity environment.
+	connectionDetails <- DatabaseConnector::createConnectionDetails(
+	  dbms = "spark",
+	  connectionString = "",
+	  user = "",
+	  password = "",
+	  pathToDriver = ""
+	)
+
+	# Optional connection check:
+	conn <- DatabaseConnector::connect(connectionDetails)
+	DatabaseConnector::disconnect(conn)
 
 	# The name of the database schema where the CDM data can be found:
-	cdmDatabaseSchema <- "cdm_synpuf"
+	cdmDatabaseSchema <- ""
 
 	# The name of the database schema and table where the study-specific cohorts will be instantiated:
-	cohortDatabaseSchema <- "scratch.dbo"
-	cohortTable <- "my_study_cohorts"
+	cohortDatabaseSchema <- ""
 
 	# Some meta-information that will be used by the export function:
-	databaseId <- "Synpuf"
-	databaseName <- "Medicare Claims Synthetic Public Use Files (SynPUFs)"
-	databaseDescription <- "Medicare Claims Synthetic Public Use Files (SynPUFs) were created to allow interested parties to gain familiarity using Medicare claims data while protecting beneficiary privacy. These files are intended to promote development of software and applications that utilize files in this format, train researchers on the use and complexities of Centers for Medicare and Medicaid Services (CMS) claims, and support safe data mining innovations. The SynPUFs were created by combining randomized information from multiple unique beneficiaries and changing variable values. This randomization and combining of beneficiary information ensures privacy of health information."
+	databaseId <- ""
 
 	# For some database platforms (e.g. Oracle): define a schema that can be used to emulate temp tables:
 	options(sqlRenderTempEmulationSchema = NULL)
 
-        CHAPTER::executeIncidencePrevalenceFinal(dbConnection = db,
-                                                 cdmDatabaseSchema,
-                                                 cohortDatabaseSchema,
-                                                 writePrefix = NULL,
-                                                 outputFolder,
-                                                 databaseId,
-                                                 readCohorts = TRUE,
-                                                 minCellCount = 5
-                                                 )
+	CHAPTER::executeIncidencePrevalenceFinal(
+	  connectionDetails,
+	  cdmDatabaseSchema,
+	  cohortDatabaseSchema,
+	  writePrefix = NULL,
+	  outputFolder,
+	  databaseId,
+	  readCohorts = TRUE,
+	  createAllergyCohorts = TRUE,
+	  createCancerCohorts = TRUE,
+	  createCardioCohorts = TRUE,
+	  createGeneralCohorts = TRUE,
+	  createPulmoCohorts = TRUE,
+	  createDenominator = TRUE,
+	  calculateIncidence = TRUE,
+	  continueOnIncidenceError = TRUE,
+	  minCellCount = 5
+	)
 	```
 
-4. Share the file ```export/Results_<DatabaseId>.zip``` in the output folder to the study coordinator
+4. Share the file `results-<databaseId>.zip` in the output folder with the study coordinator.
 
 
 License

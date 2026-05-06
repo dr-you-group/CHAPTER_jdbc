@@ -14,11 +14,12 @@ Description: A package for the CHAPTER study. This package instantiates
 Depends:
     R (>= 4.1.0)
 Imports:
-    DatabaseConnector,
-    SqlRender,
+    DatabaseConnector (>= 6.3.2),
+    SqlRender (>= 1.19.5),
     CohortGenerator,
     ParallelLogger,
     dplyr,
+    ggplot2,
     readr,
     zip
 Suggests:

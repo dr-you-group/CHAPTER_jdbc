@@ -216,10 +216,9 @@
     },
     "DatabaseConnector": {
       "Package": "DatabaseConnector",
-      "Version": "5.1.0",
+      "Version": "6.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7efe1532a5256de9dd7f2f8d90b4e6da",
       "Requirements": [
         "DBI",
         "SqlRender",
@@ -558,10 +557,9 @@
     },
     "SqlRender": {
       "Package": "SqlRender",
-      "Version": "1.10.0",
+      "Version": "1.19.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ce817a84681549f442cc4b240f2028aa",
       "Requirements": [
         "checkmate",
         "rJava",

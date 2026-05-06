@@ -8,6 +8,31 @@
   tolower(dbms)
 }
 
+.isDatabricks <- function(dbms) {
+  dbms <- tolower(dbms)
+  dbms %in% c("databricks", "spark", "spark sql", "spark_sql")
+}
+
+.getColumn <- function(x, columnName) {
+  idx <- match(tolower(columnName), tolower(names(x)))
+  if (is.na(idx)) {
+    stop("Column '", columnName, "' not found. Available columns: ", paste(names(x), collapse = ", "))
+  }
+  x[[idx]]
+}
+
+.splitSchemaName <- function(schema) {
+  parts <- strsplit(schema, "\\.")[[1]]
+  if (length(parts) == 1) {
+    list(catalog = NULL, schema = parts[1])
+  } else {
+    list(
+      catalog = paste(parts[-length(parts)], collapse = "."),
+      schema = parts[length(parts)]
+    )
+  }
+}
+
 
 
 getCohortCount <- function(cohort) {
@@ -32,26 +57,50 @@ getCohortCount <- function(cohort) {
 cohortTableExists <- function(connection, cohortDatabaseSchema, cohortTable) {
   dbms <- .getDbms(connection)
   
-  if (dbms != "oracle") {
-    stop("cohortTableExists(): currently implemented for Oracle only")
+  if (dbms == "oracle") {
+    schemaParts <- strsplit(cohortDatabaseSchema, "\\.")[[1]]
+    owner <- toupper(schemaParts[length(schemaParts)])
+    
+    sql <- "
+      SELECT COUNT(*) AS n
+      FROM all_tables
+      WHERE owner = '@owner'
+        AND table_name = '@tableName'
+    "
+    
+    sql <- SqlRender::render(
+      sql,
+      owner = owner,
+      tableName = toupper(cohortTable)
+    )
+  } else if (.isDatabricks(dbms)) {
+    schemaParts <- .splitSchemaName(cohortDatabaseSchema)
+    informationSchema <- if (is.null(schemaParts$catalog)) {
+      "information_schema.tables"
+    } else {
+      paste0(schemaParts$catalog, ".information_schema.tables")
+    }
+    
+    sql <- "
+      SELECT COUNT(*) AS n
+      FROM @informationSchema
+      WHERE lower(table_schema) = lower('@schemaName')
+        AND lower(table_name) = lower('@tableName')
+    "
+    
+    sql <- SqlRender::render(
+      sql,
+      informationSchema = informationSchema,
+      schemaName = schemaParts$schema,
+      tableName = cohortTable
+    )
+  } else {
+    stop("cohortTableExists(): unsupported dbms = ", dbms)
   }
-  
-  schemaParts <- strsplit(cohortDatabaseSchema, "\\.")[[1]]
-  owner <- toupper(schemaParts[length(schemaParts)])
-  
-  sql <- "
-    SELECT COUNT(*) AS n
-    FROM all_tables
-    WHERE owner = '@owner'
-      AND table_name = '@tableName'
-  "
-  
-  sql <- SqlRender::render(
-    sql,
-    owner = owner,
-    tableName = toupper(cohortTable)
-  )
-  sql <- SqlRender::translate(sql, targetDialect = attr(connection, 'dbms'))
+
+  if (!.isDatabricks(dbms)) {
+    sql <- SqlRender::translate(sql, targetDialect = attr(connection, 'dbms'))
+  }
   
   res <- DatabaseConnector::querySql(connection, sql)
   as.numeric(res[[1]][1]) > 0
@@ -105,9 +154,9 @@ createCdmSnapshot <- function(connection, cdmDatabaseSchema) {
   sqlObs <- SqlRender::translate(sqlObs, targetDialect = attr(connection, "dbms"))
   obsRes <- DatabaseConnector::querySql(connection, sqlObs)
   
-  opCount  <- as.character(obsRes$OP_COUNT[1])
-  opStart  <- as.character(as.Date(obsRes$OP_START_DATE[1]))
-  opEnd    <- as.character(as.Date(obsRes$OP_END_DATE[1]))
+  opCount  <- as.character(.getColumn(obsRes, "op_count")[1])
+  opStart  <- as.character(as.Date(.getColumn(obsRes, "op_start_date")[1]))
+  opEnd    <- as.character(as.Date(.getColumn(obsRes, "op_end_date")[1]))
   
   #-----------------------------
   # 3. CDM source metadata
@@ -136,13 +185,14 @@ createCdmSnapshot <- function(connection, cdmDatabaseSchema) {
   
   if (!is.null(cdmSrc) && nrow(cdmSrc) > 0) {
     row1 <- cdmSrc[1, ]
-    sourceName    <- as.character(row1$CDM_SOURCE_NAME)
-    cdmVersion    <- as.character(row1$CDM_VERSION)
-    holderName    <- as.character(row1$CDM_HOLDER)
-    releaseDate   <- if (!is.null(row1$CDM_RELEASE_DATE)) as.character(as.Date(row1$CDM_RELEASE_DATE)) else NA_character_
-    description   <- as.character(row1$SOURCE_DESCRIPTION)
-    docRef        <- as.character(row1$SOURCE_DOCUMENTATION_REFERENCE)
-    vocabVersion  <- as.character(row1$VOCABULARY_VERSION)
+    sourceName    <- as.character(.getColumn(row1, "cdm_source_name"))
+    cdmVersion    <- as.character(.getColumn(row1, "cdm_version"))
+    holderName    <- as.character(.getColumn(row1, "cdm_holder"))
+    releaseDateRaw <- .getColumn(row1, "cdm_release_date")
+    releaseDate   <- if (!is.null(releaseDateRaw)) as.character(as.Date(releaseDateRaw)) else NA_character_
+    description   <- as.character(.getColumn(row1, "source_description"))
+    docRef        <- as.character(.getColumn(row1, "source_documentation_reference"))
+    vocabVersion  <- as.character(.getColumn(row1, "vocabulary_version"))
   } else {
     sourceName   <- NA_character_
     cdmVersion   <- NA_character_
@@ -337,11 +387,13 @@ summariseCohortCharacteristicsSql <- function(connection,
   
   dbms <- .getDbms(connection)
   
-  if (dbms != "oracle") {
-    stop("summariseCohortCharacteristicsSql(): currently implemented for Oracle only")
+  if (dbms == "oracle") {
+    sql <- getCohortCharacteristicsSql_oracle()
+  } else if (.isDatabricks(dbms)) {
+    sql <- getCohortCharacteristicsSql_databricks()
+  } else {
+    stop("summariseCohortCharacteristicsSql(): unsupported dbms = ", dbms)
   }
-  
-  sql <- getCohortCharacteristicsSql_oracle()
   
   sql <- SqlRender::render(
     sql,
@@ -350,7 +402,9 @@ summariseCohortCharacteristicsSql <- function(connection,
     cohortTable  = cohortTable
   )
   
-  sql <- SqlRender::translate(sql, targetDialect = attr(connection, "dbms"))
+  if (!.isDatabricks(dbms)) {
+    sql <- SqlRender::translate(sql, targetDialect = attr(connection, "dbms"))
+  }
   
   res <- DatabaseConnector::querySql(connection, sql)
   res <- dplyr::as_tibble(res)
@@ -670,6 +724,176 @@ FROM long_rows lr
 "
 }
 
+getCohortCharacteristicsSql_databricks <- function() {
+  "
+WITH cohort AS (
+  SELECT cohort_definition_id, subject_id, cohort_start_date, cohort_end_date
+  FROM @cohortSchema.@cohortTable
+),
+p AS (
+  SELECT person_id, gender_concept_id, year_of_birth
+  FROM @cdm.person
+),
+op AS (
+  SELECT person_id, observation_period_start_date, observation_period_end_date
+  FROM @cdm.observation_period
+),
+base AS (
+  SELECT
+    c.cohort_definition_id,
+    c.subject_id,
+    c.cohort_start_date,
+    c.cohort_end_date,
+    datediff(c.cohort_end_date, c.cohort_start_date) + 1 AS days_in_cohort,
+    year(c.cohort_start_date) - p.year_of_birth AS age_years,
+    CASE
+      WHEN p.gender_concept_id = 8532 THEN 'Female'
+      WHEN p.gender_concept_id = 8507 THEN 'Male'
+      ELSE 'Other/Unknown'
+    END AS sex,
+    datediff(c.cohort_start_date, o.observation_period_start_date) AS prior_observation,
+    datediff(o.observation_period_end_date, c.cohort_start_date) AS future_observation
+  FROM cohort c
+  JOIN p ON p.person_id = c.subject_id
+  LEFT JOIN op o
+    ON o.person_id = c.subject_id
+   AND c.cohort_start_date BETWEEN o.observation_period_start_date AND o.observation_period_end_date
+),
+subj AS (
+  SELECT DISTINCT cohort_definition_id, subject_id, age_years, sex
+  FROM base
+),
+agg AS (
+  SELECT
+    cohort_definition_id,
+    COUNT(*) AS n_records,
+    COUNT(DISTINCT subject_id) AS n_subjects,
+    MIN(cohort_start_date) AS cs_min,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.25) AS INT)) AS cs_q25,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.50) AS INT)) AS cs_median,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.75) AS INT)) AS cs_q75,
+    MAX(cohort_start_date) AS cs_max,
+    MIN(cohort_end_date) AS ce_min,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.25) AS INT)) AS ce_q25,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.50) AS INT)) AS ce_median,
+    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.75) AS INT)) AS ce_q75,
+    MAX(cohort_end_date) AS ce_max,
+    MIN(age_years) AS age_min,
+    percentile_approx(age_years, 0.25) AS age_q25,
+    percentile_approx(age_years, 0.50) AS age_median,
+    percentile_approx(age_years, 0.75) AS age_q75,
+    MAX(age_years) AS age_max,
+    AVG(age_years) AS age_mean,
+    STDDEV(age_years) AS age_sd,
+    MIN(prior_observation) AS prior_min,
+    percentile_approx(prior_observation, 0.25) AS prior_q25,
+    percentile_approx(prior_observation, 0.50) AS prior_median,
+    percentile_approx(prior_observation, 0.75) AS prior_q75,
+    MAX(prior_observation) AS prior_max,
+    AVG(prior_observation) AS prior_mean,
+    STDDEV(prior_observation) AS prior_sd,
+    MIN(future_observation) AS fut_min,
+    percentile_approx(future_observation, 0.25) AS fut_q25,
+    percentile_approx(future_observation, 0.50) AS fut_median,
+    percentile_approx(future_observation, 0.75) AS fut_q75,
+    MAX(future_observation) AS fut_max,
+    AVG(future_observation) AS fut_mean,
+    STDDEV(future_observation) AS fut_sd,
+    MIN(days_in_cohort) AS dic_min,
+    percentile_approx(days_in_cohort, 0.25) AS dic_q25,
+    percentile_approx(days_in_cohort, 0.50) AS dic_median,
+    percentile_approx(days_in_cohort, 0.75) AS dic_q75,
+    MAX(days_in_cohort) AS dic_max,
+    AVG(days_in_cohort) AS dic_mean,
+    STDDEV(days_in_cohort) AS dic_sd
+  FROM base
+  GROUP BY cohort_definition_id
+),
+sex_counts AS (
+  SELECT
+    cohort_definition_id,
+    SUM(CASE WHEN sex = 'Female' THEN 1 ELSE 0 END) AS n_female,
+    SUM(CASE WHEN sex = 'Male' THEN 1 ELSE 0 END) AS n_male
+  FROM subj
+  GROUP BY cohort_definition_id
+),
+age_counts AS (
+  SELECT
+    cohort_definition_id,
+    SUM(CASE WHEN age_years BETWEEN 0 AND 19 THEN 1 ELSE 0 END) AS n_0_19,
+    SUM(CASE WHEN age_years BETWEEN 20 AND 39 THEN 1 ELSE 0 END) AS n_20_39,
+    SUM(CASE WHEN age_years BETWEEN 40 AND 59 THEN 1 ELSE 0 END) AS n_40_59,
+    SUM(CASE WHEN age_years BETWEEN 60 AND 79 THEN 1 ELSE 0 END) AS n_60_79,
+    SUM(CASE WHEN age_years BETWEEN 80 AND 150 THEN 1 ELSE 0 END) AS n_80_150
+  FROM subj
+  GROUP BY cohort_definition_id
+),
+long_rows AS (
+  SELECT a.cohort_definition_id, 'Number records' AS variable_name, 'NA' AS variable_level, 'count' AS estimate_name, 'integer' AS estimate_type, CAST(a.n_records AS STRING) AS estimate_value FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Number subjects', 'NA', 'count', 'integer', CAST(a.n_subjects AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort start date', 'NA', 'min', 'date', date_format(a.cs_min, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort start date', 'NA', 'q25', 'date', date_format(a.cs_q25, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort start date', 'NA', 'median', 'date', date_format(a.cs_median, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort start date', 'NA', 'q75', 'date', date_format(a.cs_q75, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort start date', 'NA', 'max', 'date', date_format(a.cs_max, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort end date', 'NA', 'min', 'date', date_format(a.ce_min, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort end date', 'NA', 'q25', 'date', date_format(a.ce_q25, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort end date', 'NA', 'median', 'date', date_format(a.ce_median, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort end date', 'NA', 'q75', 'date', date_format(a.ce_q75, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Cohort end date', 'NA', 'max', 'date', date_format(a.ce_max, 'yyyy-MM-dd') FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'min', 'integer', CAST(a.age_min AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'q25', 'integer', CAST(a.age_q25 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'median', 'integer', CAST(a.age_median AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'q75', 'integer', CAST(a.age_q75 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'max', 'integer', CAST(a.age_max AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'mean', 'numeric', CAST(a.age_mean AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Age', 'NA', 'sd', 'numeric', CAST(a.age_sd AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Sex', 'Female', 'count', 'integer', CAST(COALESCE(s.n_female, 0) AS STRING) FROM agg a LEFT JOIN sex_counts s ON a.cohort_definition_id = s.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Sex', 'Male', 'count', 'integer', CAST(COALESCE(s.n_male, 0) AS STRING) FROM agg a LEFT JOIN sex_counts s ON a.cohort_definition_id = s.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Age group', '0 to 19', 'count', 'integer', CAST(COALESCE(ac.n_0_19, 0) AS STRING) FROM agg a LEFT JOIN age_counts ac ON a.cohort_definition_id = ac.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Age group', '20 to 39', 'count', 'integer', CAST(COALESCE(ac.n_20_39, 0) AS STRING) FROM agg a LEFT JOIN age_counts ac ON a.cohort_definition_id = ac.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Age group', '40 to 59', 'count', 'integer', CAST(COALESCE(ac.n_40_59, 0) AS STRING) FROM agg a LEFT JOIN age_counts ac ON a.cohort_definition_id = ac.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Age group', '60 to 79', 'count', 'integer', CAST(COALESCE(ac.n_60_79, 0) AS STRING) FROM agg a LEFT JOIN age_counts ac ON a.cohort_definition_id = ac.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Age group', '80 to 150', 'count', 'integer', CAST(COALESCE(ac.n_80_150, 0) AS STRING) FROM agg a LEFT JOIN age_counts ac ON a.cohort_definition_id = ac.cohort_definition_id
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'min', 'integer', CAST(a.prior_min AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'q25', 'integer', CAST(a.prior_q25 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'median', 'integer', CAST(a.prior_median AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'q75', 'integer', CAST(a.prior_q75 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'max', 'integer', CAST(a.prior_max AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'mean', 'numeric', CAST(a.prior_mean AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Prior observation', 'NA', 'sd', 'numeric', CAST(a.prior_sd AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'min', 'integer', CAST(a.fut_min AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'q25', 'integer', CAST(a.fut_q25 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'median', 'integer', CAST(a.fut_median AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'q75', 'integer', CAST(a.fut_q75 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'max', 'integer', CAST(a.fut_max AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'mean', 'numeric', CAST(a.fut_mean AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Future observation', 'NA', 'sd', 'numeric', CAST(a.fut_sd AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'min', 'integer', CAST(a.dic_min AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'q25', 'integer', CAST(a.dic_q25 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'median', 'integer', CAST(a.dic_median AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'q75', 'integer', CAST(a.dic_q75 AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'max', 'integer', CAST(a.dic_max AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'mean', 'numeric', CAST(a.dic_mean AS STRING) FROM agg a
+  UNION ALL SELECT a.cohort_definition_id, 'Days in cohort', 'NA', 'sd', 'numeric', CAST(a.dic_sd AS STRING) FROM agg a
+)
+SELECT
+  cohort_definition_id,
+  'cohort_name' AS group_name,
+  CAST(cohort_definition_id AS STRING) AS group_level,
+  'overall' AS strata_name,
+  'overall' AS strata_level,
+  variable_name,
+  variable_level,
+  estimate_name,
+  estimate_type,
+  estimate_value,
+  'overall' AS additional_name,
+  'overall' AS additional_level
+FROM long_rows
+  "
+}
+
 # -------------------------------------------------------------------------
 # 4. Create Denominator Cohort ---------------------------------------------
 # -------------------------------------------------------------------------
@@ -691,8 +915,20 @@ createDenominatorCohort <- function(connection,
   ))
   
   dbms <- .getDbms(connection)
+  if (.isDatabricks(dbms)) {
+    createDenominatorCohortDatabricks(
+      connection = connection,
+      cdmDatabaseSchema = cdmDatabaseSchema,
+      cohortDatabaseSchema = cohortDatabaseSchema,
+      denominatorTable = denominatorTable,
+      startDate = startDate,
+      endDate = endDate,
+      minPriorObservation = minPriorObservation
+    )
+    return(invisible(TRUE))
+  }
   if (dbms != "oracle") {
-    stop("createDenominatorCohort(): This implementation is Oracle-only. Current dbms = ", dbms)
+    stop("createDenominatorCohort(): unsupported dbms = ", dbms)
   }
   
   startDateStr <- format(as.Date(startDate), "%Y-%m-%d")
@@ -856,6 +1092,118 @@ createDenominatorCohort <- function(connection,
   ParallelLogger::logInfo("Stratified denominator cohorts created (Oracle CTAS).")
 }
 
+createDenominatorCohortDatabricks <- function(connection,
+                                              cdmDatabaseSchema,
+                                              cohortDatabaseSchema,
+                                              denominatorTable,
+                                              startDate,
+                                              endDate,
+                                              minPriorObservation = 365) {
+  startDateStr <- format(as.Date(startDate), "%Y-%m-%d")
+  endDateStr   <- format(as.Date(endDate), "%Y-%m-%d")
+  
+  sql <- "
+  CREATE OR REPLACE TABLE @cohortSchema.@denom AS
+  WITH person_base AS (
+    SELECT
+      p.person_id,
+      p.gender_concept_id,
+      make_date(
+        p.year_of_birth,
+        COALESCE(NULLIF(p.month_of_birth, 0), 1),
+        COALESCE(NULLIF(p.day_of_birth, 0), 1)
+      ) AS dob
+    FROM @cdm.person p
+    WHERE p.year_of_birth IS NOT NULL
+      AND p.gender_concept_id IN (8507, 8532)
+  ),
+  obs AS (
+    SELECT
+      op.person_id,
+      op.observation_period_start_date,
+      op.observation_period_end_date
+    FROM @cdm.observation_period op
+    WHERE op.observation_period_end_date   >= to_date('@startDate')
+      AND op.observation_period_start_date <= to_date('@endDate')
+  ),
+  base AS (
+    SELECT
+      pb.person_id,
+      pb.gender_concept_id,
+      pb.dob,
+      CASE
+        WHEN date_add(o.observation_period_start_date, @minPrior) > to_date('@startDate')
+          THEN date_add(o.observation_period_start_date, @minPrior)
+        ELSE to_date('@startDate')
+      END AS risk_start_date,
+      CASE
+        WHEN o.observation_period_end_date < to_date('@endDate')
+          THEN o.observation_period_end_date
+        ELSE to_date('@endDate')
+      END AS risk_end_date
+    FROM person_base pb
+    JOIN obs o
+      ON o.person_id = pb.person_id
+  ),
+  base_clean AS (
+    SELECT DISTINCT
+      person_id,
+      gender_concept_id,
+      dob,
+      risk_start_date,
+      risk_end_date
+    FROM base
+    WHERE risk_start_date <= risk_end_date
+  ),
+  age_band_intervals AS (
+    SELECT
+      b.person_id,
+      b.gender_concept_id,
+      greatest(add_months(b.dob, 12 * 0), b.risk_start_date) AS start_0_18,
+      least(date_add(add_months(b.dob, 12 * 19), -1), b.risk_end_date) AS end_0_18,
+      greatest(add_months(b.dob, 12 * 19), b.risk_start_date) AS start_19_39,
+      least(date_add(add_months(b.dob, 12 * 40), -1), b.risk_end_date) AS end_19_39,
+      greatest(add_months(b.dob, 12 * 40), b.risk_start_date) AS start_40_65,
+      least(date_add(add_months(b.dob, 12 * 66), -1), b.risk_end_date) AS end_40_65,
+      greatest(add_months(b.dob, 12 * 66), b.risk_start_date) AS start_66_150,
+      least(date_add(add_months(b.dob, 12 * 151), -1), b.risk_end_date) AS end_66_150,
+      b.risk_start_date AS start_0_150,
+      least(date_add(add_months(b.dob, 12 * 151), -1), b.risk_end_date) AS end_0_150
+    FROM base_clean b
+  )
+  SELECT cohort_definition_id, subject_id, cohort_start_date, cohort_end_date
+  FROM (
+    SELECT 1 AS cohort_definition_id, a.person_id AS subject_id, a.start_0_18 AS cohort_start_date, a.end_0_18 AS cohort_end_date FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_0_18 <= a.end_0_18
+    UNION ALL SELECT 2, a.person_id, a.start_0_18, a.end_0_18 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_0_18 <= a.end_0_18
+    UNION ALL SELECT 3, a.person_id, a.start_0_18, a.end_0_18 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_0_18 <= a.end_0_18
+    UNION ALL SELECT 4, a.person_id, a.start_19_39, a.end_19_39 FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_19_39 <= a.end_19_39
+    UNION ALL SELECT 5, a.person_id, a.start_19_39, a.end_19_39 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_19_39 <= a.end_19_39
+    UNION ALL SELECT 6, a.person_id, a.start_19_39, a.end_19_39 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_19_39 <= a.end_19_39
+    UNION ALL SELECT 7, a.person_id, a.start_40_65, a.end_40_65 FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_40_65 <= a.end_40_65
+    UNION ALL SELECT 8, a.person_id, a.start_40_65, a.end_40_65 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_40_65 <= a.end_40_65
+    UNION ALL SELECT 9, a.person_id, a.start_40_65, a.end_40_65 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_40_65 <= a.end_40_65
+    UNION ALL SELECT 10, a.person_id, a.start_66_150, a.end_66_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_66_150 <= a.end_66_150
+    UNION ALL SELECT 11, a.person_id, a.start_66_150, a.end_66_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_66_150 <= a.end_66_150
+    UNION ALL SELECT 12, a.person_id, a.start_66_150, a.end_66_150 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_66_150 <= a.end_66_150
+    UNION ALL SELECT 13, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_0_150 <= a.end_0_150
+    UNION ALL SELECT 14, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_0_150 <= a.end_0_150
+    UNION ALL SELECT 15, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_0_150 <= a.end_0_150
+  )
+  "
+  
+  sql <- SqlRender::render(
+    sql,
+    cdm = cdmDatabaseSchema,
+    cohortSchema = cohortDatabaseSchema,
+    denom = denominatorTable,
+    startDate = startDateStr,
+    endDate = endDateStr,
+    minPrior = minPriorObservation
+  )
+  DatabaseConnector::executeSql(connection, sql)
+  ParallelLogger::logInfo("Stratified denominator cohorts created (Databricks CTAS).")
+}
+
 # -------------------------------------------------------------------------
 # 5. Incidence Estimation ---------------------------------------------------
 # -------------------------------------------------------------------------
@@ -873,8 +1221,19 @@ estimateIncidenceSql <- function(connection,
   ParallelLogger::logInfo(paste0("Estimating incidence for outcome table: ", outcomeTable))
   
   dbms <- .getDbms(connection)
+  if (.isDatabricks(dbms)) {
+    return(estimateIncidenceSqlDatabricks(
+      connection = connection,
+      cdmDatabaseSchema = cdmDatabaseSchema,
+      cohortDatabaseSchema = cohortDatabaseSchema,
+      denominatorTable = denominatorTable,
+      outcomeTable = outcomeTable,
+      outcomeIds = outcomeIds,
+      minCellCount = minCellCount
+    ))
+  }
   if (dbms != "oracle") {
-    stop("estimateIncidenceSql(): This implementation is Oracle-only. Current dbms = ", dbms)
+    stop("estimateIncidenceSql(): unsupported dbms = ", dbms)
   }
   
   outcomeIds <- outcomeIds[!is.na(outcomeIds)]
@@ -1052,6 +1411,182 @@ estimateIncidenceSql <- function(connection,
   } else if ("DENOM_COUNT" %in% names(res)) {
     res$DENOM_COUNT[res$DENOM_COUNT > 0 & res$DENOM_COUNT < minCellCount] <- NA
   }
+  
+  res
+}
+
+
+estimateIncidenceSqlDatabricks <- function(connection,
+                                           cdmDatabaseSchema,
+                                           cohortDatabaseSchema,
+                                           denominatorTable,
+                                           outcomeTable,
+                                           outcomeIds,
+                                           minCellCount) {
+  outcomeIds <- outcomeIds[!is.na(outcomeIds)]
+  if (length(outcomeIds) == 0) {
+    ParallelLogger::logInfo("  - No outcome IDs provided; returning empty result.")
+    return(dplyr::tibble())
+  }
+  
+  sql <- "
+  WITH date_bounds AS (
+    SELECT MIN(cohort_start_date) AS start_date,
+           MAX(cohort_end_date) AS end_date
+    FROM @cohortSchema.@denomTable
+  ),
+  month_starts AS (
+    SELECT explode(sequence(
+      CAST(date_trunc('month', start_date) AS DATE),
+      CAST(date_trunc('month', end_date) AS DATE),
+      interval 1 month
+    )) AS month_start
+    FROM date_bounds
+  ),
+  months AS (
+    SELECT
+      month_start,
+      last_day(month_start) AS month_end
+    FROM month_starts
+  ),
+  outcome_ids AS (
+    SELECT DISTINCT cohort_definition_id AS outcome_id
+    FROM @cohortSchema.@outcomeTable
+    WHERE cohort_definition_id IN (@outcomeIds)
+  ),
+  outcome_all AS (
+    SELECT
+      o.subject_id,
+      o.cohort_definition_id AS outcome_id,
+      o.cohort_start_date AS event_date
+    FROM @cohortSchema.@outcomeTable o
+    JOIN outcome_ids oi
+      ON o.cohort_definition_id = oi.outcome_id
+  ),
+  outcome_first_subject AS (
+    SELECT
+      subject_id,
+      outcome_id,
+      MIN(event_date) AS first_event_date
+    FROM outcome_all
+    GROUP BY subject_id, outcome_id
+  ),
+  denom_with_first AS (
+    SELECT
+      d.cohort_definition_id AS denom_id,
+      oi.outcome_id,
+      d.subject_id,
+      d.cohort_start_date,
+      d.cohort_end_date,
+      ofirst.first_event_date
+    FROM @cohortSchema.@denomTable d
+    CROSS JOIN outcome_ids oi
+    LEFT JOIN outcome_first_subject ofirst
+      ON d.subject_id = ofirst.subject_id
+     AND oi.outcome_id = ofirst.outcome_id
+    WHERE d.cohort_start_date <= d.cohort_end_date
+  ),
+  denom_at_risk AS (
+    SELECT
+      denom_id,
+      outcome_id,
+      subject_id,
+      cohort_start_date,
+      cohort_end_date,
+      CASE
+        WHEN first_event_date IS NOT NULL
+             AND first_event_date >= cohort_start_date
+             AND first_event_date <= cohort_end_date
+          THEN first_event_date
+        ELSE cohort_end_date
+      END AS at_risk_end_date
+    FROM denom_with_first
+    WHERE first_event_date IS NULL
+       OR first_event_date >= cohort_start_date
+  ),
+  denom_by_month AS (
+    SELECT
+      da.denom_id,
+      da.outcome_id,
+      da.subject_id,
+      m.month_start,
+      m.month_end,
+      CASE WHEN da.cohort_start_date > m.month_start THEN da.cohort_start_date ELSE m.month_start END AS start_in_month,
+      CASE WHEN da.at_risk_end_date < m.month_end THEN da.at_risk_end_date ELSE m.month_end END AS end_in_month
+    FROM denom_at_risk da
+    JOIN months m
+      ON da.cohort_start_date <= m.month_end
+     AND da.at_risk_end_date >= m.month_start
+  ),
+  denom_summary AS (
+    SELECT
+      denom_id,
+      outcome_id,
+      year(month_start) AS cal_year,
+      month(month_start) AS cal_month,
+      COUNT(DISTINCT subject_id) AS denominator_count,
+      SUM(datediff(end_in_month, start_in_month) + 1) AS person_days
+    FROM denom_by_month
+    GROUP BY denom_id, outcome_id, year(month_start), month(month_start)
+  ),
+  incidence_events AS (
+    SELECT
+      denom_id,
+      outcome_id,
+      subject_id,
+      first_event_date AS event_date
+    FROM denom_with_first
+    WHERE first_event_date IS NOT NULL
+      AND first_event_date >= cohort_start_date
+      AND first_event_date <= cohort_end_date
+  ),
+  outcome_counts AS (
+    SELECT
+      denom_id,
+      outcome_id,
+      year(event_date) AS cal_year,
+      month(event_date) AS cal_month,
+      COUNT(*) AS outcome_count
+    FROM incidence_events
+    GROUP BY denom_id, outcome_id, year(event_date), month(event_date)
+  )
+  SELECT
+    ds.denom_id,
+    ds.outcome_id,
+    ds.cal_year,
+    ds.cal_month,
+    COALESCE(oc.outcome_count, 0) AS outcome_count,
+    ds.denominator_count AS denom_count,
+    ds.person_days,
+    (ds.person_days / 365.25) AS person_years,
+    CASE
+      WHEN ds.person_days = 0 THEN NULL
+      ELSE (COALESCE(oc.outcome_count, 0) / (ds.person_days / 365.25)) * 100000
+    END AS incidence_100000_pys
+  FROM denom_summary ds
+  LEFT JOIN outcome_counts oc
+    ON oc.denom_id = ds.denom_id
+   AND oc.outcome_id = ds.outcome_id
+   AND oc.cal_year = ds.cal_year
+   AND oc.cal_month = ds.cal_month
+  ORDER BY ds.denom_id, ds.outcome_id, ds.cal_year, ds.cal_month
+  "
+  
+  sql <- SqlRender::render(
+    sql,
+    cohortSchema = cohortDatabaseSchema,
+    outcomeTable = outcomeTable,
+    denomTable = denominatorTable,
+    outcomeIds = outcomeIds
+  )
+  
+  res <- DatabaseConnector::querySql(connection, sql, snakeCaseToCamelCase = FALSE)
+  names(res) <- tolower(names(res))
+  res$outcome_table <- outcomeTable
+  res$denominator_cohort <- paste0("denominator_cohort_", res$denom_id)
+  
+  res$outcome_count[res$outcome_count > 0 & res$outcome_count < minCellCount] <- NA
+  res$denom_count[res$denom_count > 0 & res$denom_count < minCellCount] <- NA
   
   res
 }

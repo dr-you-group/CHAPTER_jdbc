@@ -192,15 +192,20 @@ executeIncidencePrevalenceFinal <- function(connectionDetails,
     "pulmo_cohorts"
   )
   
-  existingCohortTables <- allPossibleCohortTables[
+  possibleCohortTables <- if (is.null(writePrefix)) {
+    allPossibleCohortTables
+  } else {
+    paste0(writePrefix, "_", allPossibleCohortTables)
+  }
+  
+  existingCohortTables <- possibleCohortTables[
     vapply(
-      allPossibleCohortTables,
+      possibleCohortTables,
       function(x) {
-        actualName <- if (is.null(writePrefix)) x else paste0(writePrefix, "_", x)
         cohortTableExists(
           connection = connection,
           cohortDatabaseSchema = cohortDatabaseSchema,
-          cohortTable = actualName
+          cohortTable = x
         )
       },
       logical(1)
