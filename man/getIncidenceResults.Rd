@@ -2,34 +2,51 @@
 % Please edit documentation in R/GetIncidenceResults.R
 \name{getIncidenceResults}
 \alias{getIncidenceResults}
-\title{Get the incidence results of the CHAPTER study}
+\title{Get the incidence results of the CHAPTER study (ATLAS-compatible)}
 \usage{
 getIncidenceResults(
-  cdm,
+  connection,
+  cdmDatabaseSchema,
+  cohortDatabaseSchema,
+  cohortTables,
   analyses,
-  cohortNames,
-  tempDir,
-  latestDataAvailability
+  latestDataAvailability,
+  resultsDir,
+  createDenominator = TRUE,
+  calculateIncidence = TRUE,
+  continueOnIncidenceError = TRUE,
+  minCellCount
 )
 }
 \arguments{
-\item{cdm}{A cdm object as created using the
-\code{\link[CDMConnector]{cdmFromCon}} function 
-in the CDMConnector package.}
+\item{connection}{A connection object from DatabaseConnector::connect().}
+
+\item{cdmDatabaseSchema}{CDM schema name.}
+
+\item{cohortDatabaseSchema}{Cohort schema name.}
+
+\item{cohortTables}{Character vector of cohort table names to summarize.}
 
 \item{analyses}{A tibble specifying the incidence analyses to
 conduct, retrieved from the settings folder}
 
-\item{cohortNames}{Names of all the cohorts stored in the cdm}
+\item{latestDataAvailability}{Date of the latest data availability.}
 
-\item{tempDir}{Directory where the output is stored}
+\item{resultsDir}{Directory where result CSVs are written.}
 
-\item{latestDataAvailability}{Date of the latest data availability}
+\item{createDenominator}{A boolean to choose whether to create the denominator cohort table.}
+
+\item{calculateIncidence}{A boolean to choose whether to calculate incidence.}
+
+\item{continueOnIncidenceError}{A boolean to choose whether to continue if one outcome incidence query fails.}
+
+\item{minCellCount}{Minimum allowed count to report.}
 }
 \description{
-Get the incidence results of the CHAPTER study
+Get the incidence results of the CHAPTER study (ATLAS-compatible)
 }
 \details{
-This function performs the incidence calculations and characterisation
-of the relevant cohorts of the CHAPTER study.
+This function performs incidence calculations and basic cohort
+characterisation using SQL and DatabaseConnector, without CDMConnector
+or IncidencePrevalence.
 }

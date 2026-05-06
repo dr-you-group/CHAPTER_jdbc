@@ -2,29 +2,37 @@
 % Please edit documentation in R/MainFinal.R
 \name{executeIncidencePrevalenceFinal}
 \alias{executeIncidencePrevalenceFinal}
-\title{Execute the CHAPTER study}
+\title{Execute the CHAPTER study (ATLAS-compatible version)}
 \usage{
 executeIncidencePrevalenceFinal(
-  dbConnection,
+  connectionDetails,
   cdmDatabaseSchema,
   cohortDatabaseSchema,
-  writePrefix,
+  writePrefix = NULL,
   outputFolder,
   databaseId,
-  readCohorts = TRUE
+  readCohorts = TRUE,
+  createAllergyCohorts = TRUE,
+  createCancerCohorts = TRUE,
+  createCardioCohorts = TRUE,
+  createGeneralCohorts = TRUE,
+  createPulmoCohorts = TRUE,
+  createDenominator = TRUE,
+  calculateIncidence = TRUE,
+  continueOnIncidenceError = TRUE,
+  minCellCount = 5
 )
 }
 \arguments{
-\item{dbConnection}{An object of type \code{dbConnection} as created using the
-\code{\link[DBI]{dbConnect}} function in the
-DBI package.}
+\item{connectionDetails}{An object as created by
+\code{\link[DatabaseConnector]{createConnectionDetails}}.}
 
-\item{cdmDatabaseSchema}{Schema name where your patient-level data in OMOP CDM format resides.
-Note that for SQL Server, this should include both the database and
-schema name, for example 'cdm_data.dbo'.}
+\item{cdmDatabaseSchema}{Schema name where OMOP CDM resides (e.g. 'cdm.dbo').}
 
-\item{cohortDatabaseSchema}{Schema name where intermediate data can be stored. You will need to have
-write privileges in this schema.}
+\item{cohortDatabaseSchema}{Schema name where intermediate cohorts will be stored.}
+
+\item{writePrefix}{Optional prefix for tables to be created in
+\code{cohortDatabaseSchema}.}
 
 \item{outputFolder}{Name of local folder to place results; make sure to use forward slashes
 (/). Do not use a folder on a network drive since this greatly impacts
@@ -36,13 +44,28 @@ performance.}
 \item{readCohorts}{A boolean to choose whether to read and instantiate the initial cohorts
 from the available jsons.}
 
-\item{writePrefix.}{Write prefix for the tables to be created in the write schema.}
+\item{createAllergyCohorts}{A boolean to choose whether to create allergy cohorts.}
 
-\item{createCovidCohorts}{A boolean to choose whether to create the COVID related cohorts.}
+\item{createCancerCohorts}{A boolean to choose whether to create cancer cohorts.}
+
+\item{createCardioCohorts}{A boolean to choose whether to create cardiovascular cohorts.}
+
+\item{createGeneralCohorts}{A boolean to choose whether to create healthcare utilization and mortality cohorts.}
+
+\item{createPulmoCohorts}{A boolean to choose whether to create pulmonary cohorts.}
+
+\item{createDenominator}{A boolean to choose whether to create the denominator cohort table.}
+
+\item{calculateIncidence}{A boolean to choose whether to calculate incidence.}
+
+\item{continueOnIncidenceError}{A boolean to choose whether to continue if one outcome incidence query fails.}
+
+\item{minCellCount}{Minimum allowed count to report; smaller cells are suppressed.}
 }
 \description{
-Execute the CHAPTER study
+Execute the CHAPTER study (ATLAS-compatible version)
 }
 \details{
-This function executes the incidence analyses of CHAPTER study.
+This function executes the incidence analyses of the CHAPTER study using only
+the standard ATLAS stack: DatabaseConnector, SqlRender, CohortGenerator, etc.
 }

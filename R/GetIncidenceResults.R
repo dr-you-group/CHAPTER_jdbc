@@ -12,6 +12,9 @@
 #' @param analyses              Tibble/data.frame specifying incidence analyses
 #' @param latestDataAvailability Date of latest data availability (Date)
 #' @param resultsDir            Directory to save results
+#' @param createDenominator     If TRUE, create the denominator cohort table
+#' @param calculateIncidence    If TRUE, calculate incidence
+#' @param continueOnIncidenceError If TRUE, continue when one outcome incidence query fails
 #' @param minCellCount          Minimum allowed count to report
 #'
 #' @importFrom dplyr %>%

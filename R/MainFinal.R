@@ -14,6 +14,14 @@
 #' @param databaseId           Short identifier of the database (e.g. 'YUHS').
 #' @param readCohorts          If TRUE, instantiate cohorts from JSONs.
 #'                             If FALSE, assume they already exist.
+#' @param createAllergyCohorts If TRUE, create allergy cohorts.
+#' @param createCancerCohorts  If TRUE, create cancer cohorts.
+#' @param createCardioCohorts  If TRUE, create cardiovascular cohorts.
+#' @param createGeneralCohorts If TRUE, create healthcare utilization and mortality cohorts.
+#' @param createPulmoCohorts   If TRUE, create pulmonary cohorts.
+#' @param createDenominator    If TRUE, create the denominator cohort table.
+#' @param calculateIncidence   If TRUE, calculate incidence.
+#' @param continueOnIncidenceError If TRUE, continue when one outcome incidence query fails.
 #' @param minCellCount         Minimum allowed count to report; smaller cells are suppressed.
 #'
 #' @importFrom dplyr %>%

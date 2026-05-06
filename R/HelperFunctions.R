@@ -769,14 +769,14 @@ agg AS (
     COUNT(*) AS n_records,
     COUNT(DISTINCT subject_id) AS n_subjects,
     MIN(cohort_start_date) AS cs_min,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.25) AS INT)) AS cs_q25,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.50) AS INT)) AS cs_median,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_start_date), 0.75) AS INT)) AS cs_q75,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_start_date, to_date('1970-01-01')), 0.25) AS INT)) AS cs_q25,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_start_date, to_date('1970-01-01')), 0.50) AS INT)) AS cs_median,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_start_date, to_date('1970-01-01')), 0.75) AS INT)) AS cs_q75,
     MAX(cohort_start_date) AS cs_max,
     MIN(cohort_end_date) AS ce_min,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.25) AS INT)) AS ce_q25,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.50) AS INT)) AS ce_median,
-    date_from_unix_date(CAST(percentile_approx(unix_date(cohort_end_date), 0.75) AS INT)) AS ce_q75,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_end_date, to_date('1970-01-01')), 0.25) AS INT)) AS ce_q25,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_end_date, to_date('1970-01-01')), 0.50) AS INT)) AS ce_median,
+    date_add(to_date('1970-01-01'), CAST(percentile_approx(datediff(cohort_end_date, to_date('1970-01-01')), 0.75) AS INT)) AS ce_q75,
     MAX(cohort_end_date) AS ce_max,
     MIN(age_years) AS age_min,
     percentile_approx(age_years, 0.25) AS age_q25,
@@ -1188,7 +1188,7 @@ createDenominatorCohortDatabricks <- function(connection,
     UNION ALL SELECT 13, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8507 AND a.start_0_150 <= a.end_0_150
     UNION ALL SELECT 14, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id = 8532 AND a.start_0_150 <= a.end_0_150
     UNION ALL SELECT 15, a.person_id, a.start_0_150, a.end_0_150 FROM age_band_intervals a WHERE a.gender_concept_id IN (8507, 8532) AND a.start_0_150 <= a.end_0_150
-  )
+  ) denominator_rows
   "
   
   sql <- SqlRender::render(
